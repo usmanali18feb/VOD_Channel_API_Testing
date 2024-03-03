@@ -25,7 +25,7 @@ Before running the tests, make sure you have the following:
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/usmanali18feb/VOD_Channel_API_Testing
+    git clone https://github.com/usmanali18feb/VOD_Channel_API_Testing.git
     ```
 
 2. Install Newman for API testing:
