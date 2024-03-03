@@ -1,0 +1,187 @@
+{
+	"info": {
+		"_postman_id": "7438c3b7-ffbf-4e5e-8b50-027884199f50",
+		"name": "DASH VoD Channel",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32202338"
+	},
+	"item": [
+		{
+			"name": "POST DASH VoD channel.",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"if (pm.response.code === 200) {",
+							"    pm.test(\"Status code is 200\", function () {",
+							"        pm.response.to.have.status(200);",
+							"    });",
+							"}",
+							"",
+							"else if (pm.response.code === 401) {",
+							"    pm.test(\"Status code is 401: unauthorized\", function () {",
+							"        pm.expect.fail(`Status code is 401: unauthorized ${pm.response.code}`);",
+							"    });",
+							"}",
+							"else if (pm.response.code === 400) {",
+							"    pm.test(\"Status code is 400: Bad Request\", function () {",
+							"        pm.expect.fail(`Status code is 400: Bad Request ${pm.response.code}`);",
+							"    });",
+							"",
+							"} else if (pm.response.code === 403) {",
+							"    pm.test(\"Status code is 403: Forbidden\");",
+							"",
+							"} else {",
+							"    pm.test(\"Unexpected status code\", function () {",
+							"        pm.expect.fail(`Unexpected status code: ${pm.response.code}`);",
+							"    });",
+							"}",
+							"",
+							"// Test if the response is in JSON format",
+							"pm.test(\"Response is JSON\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\", \"application/json; charset=utf-8\");",
+							"});",
+							"",
+							"// Test if the \"dash\" property exists in the response body",
+							"pm.test(\"Response has 'dash' property\", function () {",
+							"    pm.expect(pm.response.json()).to.have.property(\"dash\");",
+							"});",
+							"",
+							"// Test if the \"url\" property exists in the \"dash\" property",
+							"pm.test(\"Response has 'url' property in 'dash'\", function () {",
+							"    pm.expect(pm.response.json().dash).to.have.property(\"url\");",
+							"});",
+							"// Test if the \"url\" property in the response is not null",
+							"pm.test(\"Response 'url' is not null\", function () {",
+							"    pm.expect(pm.response.json().dash.url).to.not.be.null;",
+							"});",
+							"// Test if the \"url\" property in the response contains the specified substring",
+							"pm.test(\"Response 'url' contains expected substring\", function () {",
+							"    const expectedSubstring = \"https://live.serverside.ai/vod/mpds\";",
+							"    pm.expect(pm.response.json().dash.url).to.include(expectedSubstring);",
+							"});",
+							"",
+							"",
+							"// Test if the \"clips\" property exists in the \"dash\" property",
+							"pm.test(\"Response has 'clips' property in 'dash'\", function () {",
+							"    pm.expect(pm.response.json().dash).to.have.property(\"clips\");",
+							"});",
+							"",
+							"// Test if the \"clips\" property is an array",
+							"pm.test(\"Response 'clips' is an array\", function () {",
+							"    pm.expect(pm.response.json().dash.clips).to.be.an(\"array\");",
+							"});",
+							"",
+							"// Test if the \"clips\" array has at least one item",
+							"pm.test(\"Response 'clips' array has at least one item\", function () {",
+							"    pm.expect(pm.response.json().dash.clips).to.have.length.above(0);",
+							"});",
+							"",
+							"// Test if the first item in the \"clips\" array has the required properties",
+							"pm.test(\"First item in 'clips' array has required properties\", function () {",
+							"    const firstClip = pm.response.json().dash.clips[0];",
+							"    pm.expect(firstClip).to.have.property(\"category\",\"content\");",
+							"    pm.expect(firstClip.titleId).to.be.null;",
+							"    pm.expect(firstClip).to.have.property(\"titleId\");",
+							"    pm.expect(firstClip).to.have.property(\"title\", \"Cosmo_Laundromat\");",
+							"    pm.expect(firstClip).to.have.property(\"duration\", 701333);",
+							"});",
+							"pm.test(\"Response time is less than 1000 ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "api-key",
+						"value": "{{api-key}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"url\": \"{{MRSS-url}}\",\n  \"deliverytypes\": [ \"{{deliverytypes}}\" ]\n  }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/ad-aggregation-service/mrss/channel/{{channelId}}",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"ad-aggregation-service",
+						"mrss",
+						"channel",
+						"{{channelId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "api-key",
+			"value": "ec42c250-44bf-4738-bb09-5406cacf28a7",
+			"type": "string"
+		},
+		{
+			"key": "MRSS-url",
+			"value": "https://serversideai.blob.core.windows.net/agsmrss/serverside/serverside_mrss_dash_preroll_midroll.mrss",
+			"type": "string"
+		},
+		{
+			"key": "channelId",
+			"value": "4075be64-6af4-4e9b-a371-b0986204d189",
+			"type": "string"
+		},
+		{
+			"key": "deliverytypes",
+			"value": "dash",
+			"type": "string"
+		},
+		{
+			"key": "baseURL",
+			"value": "https://live.serverside.ai",
+			"type": "string"
+		}
+	]
+}
